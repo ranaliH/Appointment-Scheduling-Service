@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appointment-scheduling-service-blue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: appointment-scheduling-service
+      env: blue
+  template:
+    metadata:
+      labels:
+        app: appointment-scheduling-service
+        env: blue
+    spec:
+      containers:
+      - name: appointment-scheduling-service
+        image: ranaliw/appointment-scheduling-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 4000
+        env:
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: healthsync-db-credentials  
+                  key: DB_HOST
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: healthsync-db-credentials 
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: healthsync-db-credentials
+                  key: DB_PASSWORD
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: healthsync-db-credentials
+                  key: DB_NAME
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: appointment-scheduling-service-blue
+spec:
+  selector:
+    app: appointment-scheduling-service
+    env: blue
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 4000
+  type: LoadBalancer
