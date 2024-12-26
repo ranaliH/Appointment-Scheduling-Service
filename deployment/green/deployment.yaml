@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: patient-record-service-green
+  name: appointment-scheduling-service-green
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: patient-record-service
+      app: appointment-scheduling-service
       env: green
   template:
     metadata:
       labels:
-        app: patient-record-service
+        app: appointment-scheduling-service
         env: green
     spec:
       containers:
-      - name: patient-record-service
-        image: ranaliw/patient-record-service:latest
+      - name: appointment-scheduling-service
+        image: ranaliw/appointment-scheduling-service:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 4000
@@ -45,10 +45,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: patient-record-service-green
+  name: appointment-scheduling-service-green
 spec:
   selector:
-    app: patient-record-service
+    app: appointment-scheduling-service
     env: green
   ports:
     - protocol: TCP
